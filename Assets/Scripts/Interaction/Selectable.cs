@@ -1,3 +1,6 @@
+using System;
+using CarRelated;
+using Controller;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -8,27 +11,72 @@ namespace Interaction
     {
         private bool _canSelect;
         private bool _isSelected;
+        private GameObject _indicator;
+        private SelectionController _selectionController;
 
-        public void OnPointerClick(PointerEventData eventData)
+        private void Awake()
         {
-            Debug.Log("SELECTED!");
+            _selectionController = FindObjectOfType<SelectionController>();
             
-            if (_canSelect)
+            for (var i = 0; i < transform.childCount; i++)
             {
-                _isSelected = true;
-                
-                Debug.Log("SELECTED!");
+                var child = transform.GetChild(i);
+
+                if (child.name.Equals("ClickStatus"))
+                {
+                    _indicator = child.gameObject;
+                    _indicator.SetActive(false);
+                }
             }
         }
 
-        public void DOAllowSelection()
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            var hit = eventData.pointerCurrentRaycast.gameObject;
+            var line = hit.GetComponent<Line>();
+            var car = hit.GetComponent<Car>();
+
+            if (line)
+            {
+                if (_selectionController.IsCarSelected())
+                {
+                    Debug.Log("Send car to line!");
+                }
+            }
+            else if(car)
+            {
+                if (_canSelect)
+                {
+                    SetParameters(true);
+                    _selectionController.SetLastSelectedObject(hit);
+                }
+                else if (_isSelected)
+                {
+                    SetParameters(false);
+                    _selectionController.ResetLastSelectedObject();
+                }
+            }
+            else
+            {
+                _selectionController.ResetLastSelectedObject();
+            }
+        }
+
+        public void AllowSelection()
         {
             _canSelect = true;
         }
         
-        public void DODisallowSelection()
+        public void DisallowSelection()
         {
             _canSelect = false;
+        }
+
+        public void SetParameters(bool status)
+        {
+            _isSelected = status;
+            _canSelect = !status;
+            _indicator.SetActive(status);
         }
     }
 }

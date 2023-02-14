@@ -6,15 +6,15 @@ namespace CarRelated
 {
     public class CarMovement : MonoBehaviour
     {
-        public void DOMoveCarTo(Vector3[] path)
+        public void MoveCarTo(Vector3[] path)
         {
             var selectable = GetComponent<Selectable>();
-            selectable.DODisallowSelection();
+            selectable.DisallowSelection();
 
             transform.DOPath(path, 3.5f)
                 .SetEase(Ease.Linear)
                 .SetLookAt(0.01f)
-                .OnComplete(selectable.DOAllowSelection)
+                .OnComplete(selectable.AllowSelection)
                 .SetSpeedBased(true);
         }
     }

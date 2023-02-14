@@ -13,15 +13,15 @@ namespace Controller
 
         private void Awake()
         {
-            DOSetPoints();
+            SetPoints();
         }
 
         private void Start()
         {
-            DOInitialSpawn();
+            InitialSpawn();
         }
 
-        private void DOInitialSpawn()
+        private void InitialSpawn()
         {
             var carsToBeSpawned = LevelData.CarsToBeSpawned[0];
             var spawnPointsPerLevel = LevelData.SpawnPointsPerLevel[0];
@@ -40,11 +40,11 @@ namespace Controller
                     _waitPoints[i]
                 };
                 
-                car.DOMoveCarTo(path);
+                car.MoveCarTo(path);
             }
         }
 
-        private void DOSetPoints()
+        private void SetPoints()
         {
             var parent = GameObject.FindGameObjectWithTag("SpawnPoints");
 
