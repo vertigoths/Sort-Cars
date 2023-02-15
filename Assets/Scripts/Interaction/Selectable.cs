@@ -1,7 +1,6 @@
 using System;
 using CarRelated;
 using Controller;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -33,14 +32,30 @@ namespace Interaction
         public void OnPointerClick(PointerEventData eventData)
         {
             var hit = eventData.pointerCurrentRaycast.gameObject;
-            var line = hit.GetComponent<Line>();
+            var line = hit.GetComponent<Line.Line>();
             var car = hit.GetComponent<Car>();
+
+            if (!_selectionController.CanSelect())
+            {
+                return;
+            }
 
             if (line)
             {
-                if (_selectionController.IsCarSelected())
+                if (_selectionController.IsCarSelected() && !line.IsFull())
                 {
-                    Debug.Log("Send car to line!");
+                    _selectionController.SetCanSelect(false);
+                    car = _selectionController.GetLastSelectedObject().GetComponent<Car>();
+
+                    if (car.GetLine() != line)
+                    {
+                        line.SendCarTo(car);
+                        car.SetLine(line);
+                    }
+                    else
+                    {
+                        _selectionController.SetCanSelect(true);
+                    }
                 }
             }
             else if(car)
@@ -64,6 +79,7 @@ namespace Interaction
 
         public void AllowSelection()
         {
+            _selectionController.SetCanSelect(true);
             _canSelect = true;
         }
         

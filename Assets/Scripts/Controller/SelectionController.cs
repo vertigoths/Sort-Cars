@@ -7,6 +7,7 @@ namespace Controller
     public class SelectionController : MonoBehaviour
     {
         private GameObject _lastSelectedObject;
+        private bool _canSelect;
 
         public bool IsCarSelected()
         {
@@ -31,7 +32,18 @@ namespace Controller
             {
                 var selectable = _lastSelectedObject.GetComponent<Selectable>();
                 selectable.SetParameters(false);
+                _lastSelectedObject = null;
             }
+        }
+
+        public bool CanSelect()
+        {
+            return _canSelect;
+        }
+
+        public void SetCanSelect(bool canSelect)
+        {
+            _canSelect = canSelect;
         }
     }
 }

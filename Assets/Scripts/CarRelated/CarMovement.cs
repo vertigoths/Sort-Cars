@@ -11,9 +11,9 @@ namespace CarRelated
             var selectable = GetComponent<Selectable>();
             selectable.DisallowSelection();
 
-            transform.DOPath(path, 3.5f)
+            transform.DOPath(path, 3f)
                 .SetEase(Ease.Linear)
-                .SetLookAt(0.01f)
+                .SetLookAt(0.08f)
                 .OnComplete(selectable.AllowSelection)
                 .SetSpeedBased(true);
         }
