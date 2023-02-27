@@ -17,11 +17,13 @@ namespace Controller
         private CarType[] _carsToBeSpawned;
 
         private Dictionary<int, bool> _lineStats;
+        private int _totalLineCount;
 
         private void Awake()
         {
             _lineStats = new Dictionary<int, bool>();
-
+            _totalLineCount = LevelData.LinePerLevel[PlayerPrefs.GetInt("CurrentLevel")];
+            
             SetPoints();
         }
 
@@ -42,7 +44,7 @@ namespace Controller
                 SpawnCar(i, i);
             }
 
-            _lastIndex = _carsToBeSpawned.Length - spawnPointsPerLevel;
+            _lastIndex = spawnPointsPerLevel;
         }
 
         private void SetPoints()
@@ -94,11 +96,6 @@ namespace Controller
 
         private bool CheckIfAllLinesCorrect()
         {
-            foreach (var status in _lineStats.Values)
-            {
-                Debug.Log(status + " | ");
-            }
-            
             return _lineStats.Values.All(status => status);
         }
 
@@ -106,7 +103,7 @@ namespace Controller
         {
             _lineStats[index] = status;
 
-            if (CheckIfAllLinesCorrect())
+            if (_lineStats.Count == _totalLineCount && CheckIfAllLinesCorrect())
             {
                 FindObjectOfType<LevelController>().OnWin();
             }

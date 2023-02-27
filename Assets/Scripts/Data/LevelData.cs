@@ -29,6 +29,17 @@ namespace Data
                     CarType.Taxi,
                     CarType.Police,
                 }
+            },
+            {
+                1, new[]
+                {
+                    CarType.Coupe,
+                    CarType.Police,
+                    CarType.Coupe,
+                    CarType.Police,
+                    CarType.Coupe,
+                    CarType.Coupe,
+                }
             }
         };
 
@@ -36,6 +47,19 @@ namespace Data
         {
             {
                 0, 2
+            },
+            {
+                1, 2
+            }
+        };
+        
+        public static readonly Dictionary<int, int> LinePerLevel = new Dictionary<int, int>()
+        {
+            {
+                0, 2
+            },
+            {
+                1, 3
             }
         };
     }

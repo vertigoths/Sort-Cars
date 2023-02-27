@@ -30,7 +30,7 @@ namespace Controller
 
         public void OpenLevel()
         {
-            SceneManager.LoadScene("Game");
+            SceneManager.LoadScene("Level" + (PlayerPrefs.GetInt("CurrentLevel") + 1));
         }
     }
 }
