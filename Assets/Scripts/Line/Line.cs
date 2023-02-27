@@ -8,13 +8,15 @@ namespace Line
     {
         [SerializeField] private int maxCapacity;
         [SerializeField] private Vector3 offset;
-        private List<Car> _cars;
+        private LinkedList<Car> _cars;
         private Vector3 _startPoint;
         public Vector3 EntryPoint { get; private set; }
 
+        [SerializeField] private int lineIndex;
+
         private void Awake()
         {
-            _cars = new List<Car>();
+            _cars = new LinkedList<Car>();
             var childCount = transform.parent.childCount;
 
             for (var i = 0; i < childCount; i++)
@@ -62,7 +64,21 @@ namespace Line
                 carMovement.MoveCarTo(path);
             }
             
-            _cars.Add(car);
+            _cars.AddLast(car);
+
+            if (IsFull() && AreAllSameCars())
+            {
+                car.Spawner.ChangeLineStatus(lineIndex, true);
+            }
+            else
+            {
+                car.Spawner.ChangeLineStatus(lineIndex, false);
+            }
+        }
+        
+        public void SetCarTo(Car car)
+        {
+            _cars.AddLast(car);
         }
 
         public bool IsFull()
@@ -78,6 +94,26 @@ namespace Line
         private Vector3 GetParkingPosition()
         {
             return _startPoint + (_cars.Count * offset);
+        }
+
+        public Car GetLastCar()
+        {
+            return _cars.Last.Value;
+        }
+
+        private bool AreAllSameCars()
+        {
+            var firstCar = _cars.First.Value;
+            
+            foreach (var car in _cars)
+            {
+                if (firstCar.GetCarType() != car.GetCarType())
+                {
+                    return false;
+                }
+            }
+            
+            return true;
         }
     }
 }

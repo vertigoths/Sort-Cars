@@ -26,10 +26,8 @@ namespace Data
             {
                 0, new[]
                 {
-                    CarType.Coupe,
+                    CarType.Taxi,
                     CarType.Police,
-                    CarType.Coupe,
-                    CarType.Police
                 }
             }
         };

@@ -16,7 +16,8 @@ namespace Interaction
         private void Awake()
         {
             _selectionController = FindObjectOfType<SelectionController>();
-            
+            _canSelect = true;
+
             for (var i = 0; i < transform.childCount; i++)
             {
                 var child = transform.GetChild(i);
@@ -60,15 +61,13 @@ namespace Interaction
             }
             else if(car)
             {
-                if (_canSelect)
+                if (car.InLine() && car.GetLine().GetLastCar() == car)
                 {
-                    SetParameters(true);
-                    _selectionController.SetLastSelectedObject(hit);
+                    ArrangeParameters(hit);
                 }
-                else if (_isSelected)
+                else if(!car.InLine())
                 {
-                    SetParameters(false);
-                    _selectionController.ResetLastSelectedObject();
+                    ArrangeParameters(hit);
                 }
             }
             else
@@ -80,12 +79,11 @@ namespace Interaction
         public void AllowSelection()
         {
             _selectionController.SetCanSelect(true);
-            _canSelect = true;
         }
         
         public void DisallowSelection()
         {
-            _canSelect = false;
+            _selectionController.SetCanSelect(false);
         }
 
         public void SetParameters(bool status)
@@ -93,6 +91,20 @@ namespace Interaction
             _isSelected = status;
             _canSelect = !status;
             _indicator.SetActive(status);
+        }
+
+        private void ArrangeParameters(GameObject hit)
+        {
+            if (_canSelect)
+            {
+                SetParameters(true);
+                _selectionController.SetLastSelectedObject(hit);
+            }
+            else if (_isSelected)
+            {
+                SetParameters(false);
+                _selectionController.ResetLastSelectedObject();
+            }
         }
     }
 }

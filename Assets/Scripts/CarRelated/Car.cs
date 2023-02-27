@@ -1,3 +1,5 @@
+using System;
+using Controller;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -5,28 +7,54 @@ namespace CarRelated
 {
     public class Car : MonoBehaviour
     {
+        public Spawner Spawner { get; set; }
+        public int PointIndex { get; set; }
+        
         [SerializeField] private CarType type;
-        private Line.Line _currentLine;
-        private int _lineIndex;
+        [SerializeField] private Line.Line currentLine;
+        private bool _everMoved;
+
+        private void Start()
+        {
+            if (currentLine)
+            {
+                currentLine.SetCarTo(this);
+            }
+        }
 
         public void SetLine(Line.Line line)
         {
-            _currentLine = line;
+            currentLine = line;
+
+            if (!_everMoved)
+            {
+                _everMoved = true;
+
+                if (Spawner)
+                {
+                    Spawner.OnCarLeaveWaitLine(PointIndex);
+                }
+            }
         }
 
         public bool InLine()
         {
-            return _currentLine;
+            return currentLine;
         }
 
         public Vector3 GetLineEntryPoint()
         {
-            return _currentLine.EntryPoint;
+            return currentLine.EntryPoint;
         }
 
         public Line.Line GetLine()
         {
-            return _currentLine;
+            return currentLine;
+        }
+
+        public CarType GetCarType()
+        {
+            return type;
         }
     }
 }
